@@ -4,6 +4,7 @@ COPY package.json /observer
 COPY package-lock.json /observer
 COPY obse.js /observer
 COPY wait-for-it.sh /observer
+ADD log /observer
 RUN npm i
 RUN apk update && apk add bash
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

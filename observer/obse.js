@@ -1,6 +1,7 @@
 const amqp = require('amqplib/callback_api');
 const fs = require('fs');
 const os = require('os');
+const path = require('path');
 
 amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
     if (error0) {
@@ -27,7 +28,7 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
             channel.consume(q.queue, msg => {
                 const msgToWrite = `${(new Date()).toISOString()} Topic ${msg.fields.routingKey}: ${msg.content.toString()}`;
                 console.log(msgToWrite);
-                fs.appendFile('obse.txt', `${msgToWrite}${os.EOL}`, {'flag': 'a'},(err) => {
+                fs.appendFile(`${__dirname}/log/obse.txt`, `${msgToWrite}${os.EOL}`, {'flag': 'a'},(err) => {
                     if (err) throw err;
                     console.log('Saved!');
                   });
