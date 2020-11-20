@@ -12,11 +12,10 @@ services:
     observer:
         container_name: observer
         build: ./observer
-        ports:
-            - "8080:8080"
         volumes:
-            - ./observer:/observer
-            - nodemodules:/observer/node_modules
+        #     - ./observer:/observer
+            # - nodemodules:/observer/node_modules
+            - share-log:/observer
         depends_on: 
             - rabbitmq
         links:
@@ -29,9 +28,9 @@ services:
     original:
         container_name: original
         build: ./original
-        volumes:
-            - ./original:/original
-            - nodemodules:/original/node_modules
+        # volumes:
+        #     - ./original:/original
+            # - nodemodules:/original/node_modules
         restart: on-failure
         depends_on: 
             - rabbitmq
@@ -45,9 +44,9 @@ services:
     intermediate:
         container_name: intermediate
         build: ./intermediate
-        volumes:
-            - ./intermediate:/intermediate
-            - nodemodules:/intermediate/node_modules
+        # volumes:
+            # - ./intermediate:/intermediate
+            # - nodemodules:/intermediate/node_modules
         restart: on-failure
         depends_on: 
             - rabbitmq
@@ -57,9 +56,22 @@ services:
             - app-networks
         environment: 
             - MESSAGE_QUEUE=amqp://rabbitmq
+    
+    httpenv:
+        container_name: httpenv
+        build: ./httpenv
+        ports:
+            - "8080:8080"
+        volumes:
+            # - ./httpenv:/httpenv
+            # - nodemodules:/httpenv/node_modules
+            - share-log:/observer:ro
+        networks:
+            - app-networks
 
 volumes:
-    nodemodules: {}
+    nodemodules: 
+    share-log:
 
 networks: 
     app-networks:
