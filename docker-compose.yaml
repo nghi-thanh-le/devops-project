@@ -1,28 +1,28 @@
 version: "3.8"
 services:
-    rabbitmq:
-        image: rabbitmq:3-management
-        container_name: rabbitmq
-        ports:
-            - 5672:5672
-            - 15672:15672
-        networks: 
-            - app-networks
+    # rabbitmq:
+    #     image: rabbitmq:3-management
+    #     container_name: rabbitmq
+    #     ports:
+    #         - 5672:5672
+    #         - 15672:15672
+    #     networks: 
+    #         - app-networks
 
-    observer:
-        container_name: observer
-        build: ./observer
-        volumes:
-            - ./observer:/observer
-            - share-log:/observer/log
-        depends_on: 
-            - rabbitmq
-        links:
-            - rabbitmq
-        networks:
-            - app-networks
-        environment: 
-            - MESSAGE_QUEUE=amqp://rabbitmq
+    # observer:
+    #     container_name: observer
+    #     build: ./observer
+    #     volumes:
+    #         - ./observer:/observer
+    #         - share-log:/observer/log
+    #     depends_on: 
+    #         - rabbitmq
+    #     links:
+    #         - rabbitmq
+    #     networks:
+    #         - app-networks
+    #     environment: 
+    #         - MESSAGE_QUEUE=amqp://rabbitmq
 
     original:
         container_name: original
@@ -31,40 +31,40 @@ services:
             - ./original:/original
             - share-log:/original/log
         restart: on-failure
-        depends_on: 
-            - rabbitmq
-        links:
-            - rabbitmq
+        # depends_on: 
+        #     - rabbitmq
+        # links:
+        #     - rabbitmq
         networks:
             - app-networks
         environment: 
             - MESSAGE_QUEUE=amqp://rabbitmq
 
-    intermediate:
-        container_name: intermediate
-        build: ./intermediate
-        volumes:
-            - ./intermediate:/intermediate
-        restart: on-failure
-        depends_on: 
-            - rabbitmq
-        links:
-            - rabbitmq
-        networks:
-            - app-networks
-        environment: 
-            - MESSAGE_QUEUE=amqp://rabbitmq
+    # intermediate:
+    #     container_name: intermediate
+    #     build: ./intermediate
+    #     volumes:
+    #         - ./intermediate:/intermediate
+    #     restart: on-failure
+    #     depends_on: 
+    #         - rabbitmq
+    #     links:
+    #         - rabbitmq
+    #     networks:
+    #         - app-networks
+    #     environment: 
+    #         - MESSAGE_QUEUE=amqp://rabbitmq
     
-    httpenv:
-        container_name: httpenv
-        build: ./httpenv
-        ports:
-            - "8080:8080"
-        volumes:
-            - ./httpenv:/httpenv
-            - share-log:/httpenv/log:ro
-        networks:
-            - app-networks
+    # httpenv:
+    #     container_name: httpenv
+    #     build: ./httpenv
+    #     ports:
+    #         - "8080:8080"
+    #     volumes:
+    #         - ./httpenv:/httpenv
+    #         - share-log:/httpenv/log:ro
+    #     networks:
+    #         - app-networks
 
 volumes:
     nodemodules: 
