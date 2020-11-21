@@ -9,7 +9,7 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
     }
     console.log('[*] Connect to rabbitmq from Ovserver')
     connection.createChannel((error1, channel) => {
-        if(error1) {
+        if (error1) {
             throw error1;
         }
         const EXCHANGE = 'message_queue';
@@ -24,14 +24,14 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
             if (error2) throw error2;
 
             channel.bindQueue(q.queue, EXCHANGE, "my.*");
-            
+
             channel.consume(q.queue, msg => {
                 const msgToWrite = `${(new Date()).toISOString()} Topic ${msg.fields.routingKey}: ${msg.content.toString()}`;
                 console.log(msgToWrite);
-                fs.appendFile(`${__dirname}/log/obse.txt`, `${msgToWrite}${os.EOL}`, {'flag': 'a'},(err) => {
+                fs.appendFile(`${__dirname}/log/obse.log`, `${msgToWrite}${os.EOL}`, { 'flag': 'a' }, (err) => {
                     if (err) throw err;
                     console.log('Saved!');
-                  });
+                });
             }, {
                 noAck: true
             });

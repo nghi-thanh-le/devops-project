@@ -10,7 +10,20 @@ app.get('/', (req, res) => {
 });
 
 app.get('/messages', (req, res) => {
-  fs.readFile(`${__dirname}/log/obse.txt`, 'utf-8',(e, data) => {
+  fs.readFile(`${__dirname}/log/obse.log`, 'utf-8',(e, data) => {
+    if (e) {
+      console.error(e);
+      res.statusCode = 400;
+      res.send(e);
+    } else {
+      res.statusCode = 200;
+      res.send(data);
+    }
+  });
+});
+
+app.get('/run-log', (req, res) => {
+  fs.readFile(`${__dirname}/log/orig-state.log`, 'utf-8',(e, data) => {
     if (e) {
       console.error(e);
       res.statusCode = 400;

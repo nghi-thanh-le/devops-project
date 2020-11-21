@@ -1,5 +1,5 @@
-import State from 'orig-state';
 const amqp = require('amqplib/callback_api');
+const State = require('./orig-state.js').State;
 
 let state = State.getState();
 console.log(`Current State: ${state}`);

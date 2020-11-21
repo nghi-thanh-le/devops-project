@@ -29,6 +29,7 @@ services:
         build: ./original
         volumes:
             - ./original:/original
+            - share-log:/original/log
         restart: on-failure
         depends_on: 
             - rabbitmq

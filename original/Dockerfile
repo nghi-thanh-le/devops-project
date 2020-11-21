@@ -1,10 +1,11 @@
-FROM node:alpine
+FROM node:lts-alpine
 WORKDIR /original
 COPY package-lock.json /original
 COPY package.json /original
 COPY orig.js /original
 COPY orig-state.js /original
 COPY wait-for-it.sh /original
+ADD log /original
 RUN npm i
 RUN npm i -g nodemon
 RUN apk update && apk add bash
