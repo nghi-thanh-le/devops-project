@@ -3,8 +3,10 @@ WORKDIR /original
 COPY package-lock.json /original
 COPY package.json /original
 COPY orig.js /original
+COPY orig-state.js /original
 COPY wait-for-it.sh /original
 RUN npm i
+RUN npm i -g nodemon
 RUN apk update && apk add bash
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
-CMD [ "./wait-for-it.sh", "rabbitmq:15672", "--","node", "orig.js" ]
+CMD [ "./wait-for-it.sh", "rabbitmq:15672", "--","nodemon", "orig.js" ]

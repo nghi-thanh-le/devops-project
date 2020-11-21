@@ -6,5 +6,6 @@ COPY server.js /httpenv
 ADD log /httpenv
 RUN apk update && apk add bash
 RUN npm i
-CMD [ "node", "server.js" ]
+RUN npm i -g nodemon
+CMD [ "nodemon", "server.js" ]
 EXPOSE 8080
