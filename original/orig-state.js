@@ -12,7 +12,7 @@ const State = (() => {
         }
     
         const msgToWrite = `${(new Date()).toISOString()}: ${state}`;
-        console.log(msgToWrite);
+        // console.log(msgToWrite);
         fs.appendFile(`${__dirname}/log/orig-state.log`, `${msgToWrite}${os.EOL}`, { 'flag': 'a' }, (err) => {
             if (err) {
                 console.error(err);
@@ -35,8 +35,8 @@ const State = (() => {
             console.warn('assign empty state. skip');
             return;
         }
-        logState();
         state = newState;
+        logState();
     };
 
     return {getState, setState};

@@ -1,10 +1,14 @@
 const amqp = require('amqplib/callback_api');
 const State = require('./orig-state.js').State;
 
-let state = State.getState();
-console.log(`Current State: ${state}`);
+console.log(`Current State: ${State.getState()}`);
+console.log('Switch state to pause');
+State.setState('PAUSED');
+console.log(`Current State: ${State.getState()}`);
+console.log('Switch state to RUNNING');
+State.setState('RUNNING');
+console.log(`Current State: ${State.getState()}`);
 
-// amqp.connect("amqp://localhost", (error0, connection) => {
 amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
     if (error0) {
         throw error0;
