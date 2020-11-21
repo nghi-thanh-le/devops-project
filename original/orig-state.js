@@ -3,13 +3,9 @@ const os = require('os');
 
 const State = (() => {
     let state = '';
+    const INIT_STATE = 'INIT';
 
-    let initState = () => {
-        let initialState = 'INIT';
-        return initialState;
-    };
-
-    let logState = () => {
+    const logState = () => {
         if (state === '') {
             console.warn('Empty state, skip log');
             return;
@@ -26,15 +22,15 @@ const State = (() => {
         });
     };
 
-    let getState = () => {
+    const getState = () => {
         if (state === '') {
-            state = initState();
+            state = INIT_STATE;
             logState();
         }
         return state;
     };
 
-    let setState = (newState = '') => {
+    const setState = (newState = '') => {
         if (newState === '') {
             console.warn('assign empty state. skip');
             return;
