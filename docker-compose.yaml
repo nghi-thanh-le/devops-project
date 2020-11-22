@@ -30,6 +30,7 @@ services:
         volumes:
             - ./original:/original
             - share-log:/original/log
+            - state-db:/original/state-db
         restart: on-failure
         # depends_on: 
         #     - rabbitmq
@@ -69,6 +70,7 @@ services:
 volumes:
     nodemodules: 
     share-log:
+    state-db:
 
 networks: 
     app-networks:

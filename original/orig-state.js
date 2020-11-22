@@ -1,6 +1,9 @@
 const fs = require('fs');
 const os = require('os');
 
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+
 const isEmpty = (obj) => {
     for (let prop in obj) {
         if (obj.hasOwnProperty(prop)) {
@@ -12,27 +15,24 @@ const isEmpty = (obj) => {
 };
 
 const State = (() => {
-    const STATE_LOCATION = `${__dirname}/state.json`;
+    const STATE_LOCATION = `${__dirname}/state-db/state.json`;
     const DEFAULT_STATE = 'RUNNING';
+    const DEFAULT_INIT_STATE = 'INIT';
+
+    const adapter = new FileSync('state-db/state.json', {
+        defaultValue: {
+            state: {
+                currentState: DEFAULT_INIT_STATE
+            }
+        }
+    });
+    const db = low(adapter)
+    
     let state = '';
 
     const initState = () => {
-        // because state.json is small. it's fine to sync access it. 
-        const jsonData = (() => {
-            try {
-                const jsonData = fs.readFileSync(STATE_LOCATION);
-                return JSON.parse(jsonData);
-            } catch (error) {
-                console.error(error);
-                fs.writeFile(`${__dirname}/state.json`, JSON.stringify({
-                    currentState: 'INIT'
-                }), err => {
-                    if (err) console.error(err);
-                });
-                return {};
-            }
-        })();
-
+        // because state.json is small. it's fine to sync modify it. 
+        const jsonData = db.get('state', {});
         return isEmpty(jsonData) ? DEFAULT_STATE : jsonData.currentState;;
     };
 
@@ -69,13 +69,10 @@ const State = (() => {
         state = newState;
         logState();
 
-        const newStateData = JSON.stringify({
+        const newStateData = {
             currentState: state
-        });
-
-        fs.writeFile(`${__dirname}/state.json`, newStateData, 'utf-8', (err, data) => {
-            if(err) console.error(err);
-        });
+        };
+        db.set('state', newStateData).write();
     };
 
     return { getState, setState };
