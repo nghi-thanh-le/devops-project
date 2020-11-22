@@ -56,16 +56,17 @@ services:
     #     environment: 
     #         - MESSAGE_QUEUE=amqp://rabbitmq
     
-    # httpenv:
-    #     container_name: httpenv
-    #     build: ./httpenv
-    #     ports:
-    #         - "8080:8080"
-    #     volumes:
-    #         - ./httpenv:/httpenv
-    #         - share-log:/httpenv/log:ro
-    #     networks:
-    #         - app-networks
+    httpenv:
+        container_name: httpenv
+        build: ./httpenv
+        ports:
+            - "8080:8080"
+        volumes:
+            - ./httpenv:/httpenv
+            - share-log:/httpenv/log:ro
+            - state-db:/httpenv/state-db:ro
+        networks:
+            - app-networks
 
 volumes:
     nodemodules: 

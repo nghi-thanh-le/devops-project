@@ -1,6 +1,18 @@
 const fs = require('fs')
 const express = require('express');
-const path = require('path');
+
+const low = require('lowdb');
+const FileSync = require('lowdb/adapters/FileSync');
+
+const adapter = new FileSync('state-db/state.json', {
+  defaultValue: {
+      state: {
+          currentState: 'INIT'
+      }
+  }
+});
+const db = low(adapter)
+
 
 const app = express();
 
@@ -33,6 +45,14 @@ app.get('/run-log', (req, res) => {
       res.send(data);
     }
   });
+});
+
+app.get('/state', (req, res) => {
+  res.send(JSON.stringify(db.get('state', {})));
+});
+
+app.put('state', (req, res) => {
+  res.send('Not yet operated');
 });
 
 app.listen(8080, () => {
