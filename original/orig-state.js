@@ -19,7 +19,7 @@ const State = (() => {
     const DEFAULT_STATE = 'RUNNING';
     const DEFAULT_INIT_STATE = 'INIT';
 
-    const adapter = new FileSync('state-db/state.json', {
+    const adapter = new FileSync(STATE_LOCATION, {
         defaultValue: {
             state: {
                 currentState: DEFAULT_INIT_STATE
@@ -31,7 +31,6 @@ const State = (() => {
     let state = '';
 
     const initState = () => {
-        // because state.json is small. it's fine to sync modify it. 
         const jsonData = db.get('state', {});
         return isEmpty(jsonData) ? DEFAULT_STATE : jsonData.currentState;;
     };
@@ -78,4 +77,4 @@ const State = (() => {
     return { getState, setState };
 })();
 
-module.exports = { State };
+module.exports = State;

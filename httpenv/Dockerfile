@@ -3,6 +3,7 @@ WORKDIR /httpenv
 COPY package.json /httpenv
 COPY package-lock.json /httpenv
 COPY server.js /httpenv
+COPY swagger.json /httpenv
 ADD log /httpenv
 ADD state-db /httpenv
 RUN apk update && apk add bash
