@@ -46,6 +46,14 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
             channel.consume(q.queue, function (msg) {
                 if (msg.content) {
                     console.log(" [x] %s", msg.content.toString());
+                    if (msg.content == 'SHUTDOWN') {
+                        console.log('shutting down');
+                        clearInterval();
+                        connection.close();
+                        process.exit(0);
+                    } else if (msg.content === 'INIT' || msg.content === 'RUNNING') {
+                        // TODO: up and running
+                    }
                 }
             }, {
                 noAck: true

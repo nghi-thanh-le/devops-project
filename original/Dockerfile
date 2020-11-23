@@ -12,4 +12,5 @@ RUN npm i -g nodemon
 RUN apk update && apk add bash
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # CMD [ "./wait-for-it.sh", "rabbitmq:15672", "--","nodemon", "orig.js" ]
-CMD ["nodemon", "--ignore", "state-db", "orig.js" ]
+# CMD ["nodemon", "--ignore", "state-db", "orig.js" ]
+CMD [ "./wait-for-it.sh", "rabbitmq:15672", "--","node", "orig.js" ]

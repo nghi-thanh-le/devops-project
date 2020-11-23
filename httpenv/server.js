@@ -71,9 +71,7 @@ app.get('/state', (req, res) => {
       // close it right away will stop msg
       setTimeout(function() { 
         connection.close(); 
-        process.exit(0); 
       }, 500);
-      
     });
   });
   res.send(" [x] Sent message");
