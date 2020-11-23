@@ -40,7 +40,7 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
             if (error2) {
                 throw error2;
             }
-            console.log(" [*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
+            console.log("[*] Waiting for messages in %s. To exit press CTRL+C", q.queue);
             channel.bindQueue(q.queue, SHUTDOWN_EXCHANGE, '');
 
             channel.consume(q.queue, function (msg) {

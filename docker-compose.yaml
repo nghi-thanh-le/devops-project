@@ -9,20 +9,20 @@ services:
         networks: 
             - app-networks
 
-    observer:
-        container_name: observer
-        build: ./observer
-        volumes:
-            - ./observer:/observer
-            - share-log:/observer/log
-        depends_on: 
-            - rabbitmq
-        links:
-            - rabbitmq
-        networks:
-            - app-networks
-        environment: 
-            - MESSAGE_QUEUE=amqp://rabbitmq
+    # observer:
+    #     container_name: observer
+    #     build: ./observer
+    #     volumes:
+    #         - ./observer:/observer
+    #         - share-log:/observer/log
+    #     depends_on: 
+    #         - rabbitmq
+    #     links:
+    #         - rabbitmq
+    #     networks:
+    #         - app-networks
+    #     environment: 
+    #         - MESSAGE_QUEUE=amqp://rabbitmq
 
     original:
         container_name: original
@@ -41,20 +41,20 @@ services:
         environment: 
             - MESSAGE_QUEUE=amqp://rabbitmq
 
-    intermediate:
-        container_name: intermediate
-        build: ./intermediate
-        volumes:
-            - ./intermediate:/intermediate
-        restart: on-failure
-        depends_on: 
-            - rabbitmq
-        links:
-            - rabbitmq
-        networks:
-            - app-networks
-        environment: 
-            - MESSAGE_QUEUE=amqp://rabbitmq
+    # intermediate:
+    #     container_name: intermediate
+    #     build: ./intermediate
+    #     volumes:
+    #         - ./intermediate:/intermediate
+    #     restart: on-failure
+    #     depends_on: 
+    #         - rabbitmq
+    #     links:
+    #         - rabbitmq
+    #     networks:
+    #         - app-networks
+    #     environment: 
+    #         - MESSAGE_QUEUE=amqp://rabbitmq
     
     httpenv:
         container_name: httpenv

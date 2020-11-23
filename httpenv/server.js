@@ -68,7 +68,12 @@ app.get('/state', (req, res) => {
 
       channel.publish(exchange, '', Buffer.from(msg));
       console.log(" [x] Sent %s", msg);
-      connection.close(); 
+      // close it right away will stop msg
+      setTimeout(function() { 
+        connection.close(); 
+        process.exit(0); 
+      }, 500);
+      
     });
   });
   res.send(" [x] Sent message");
