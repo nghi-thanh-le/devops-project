@@ -6,19 +6,22 @@ const swaggerDocument = require('./swagger.json');
 const bodyParser = require('body-parser');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
-const adapter = new FileSync('state-db/state.json', {
+const adapter = new FileSync(`${__dirname}/state-db/state.json`, {
   defaultValue: {
     state: {
       currentState: 'INIT'
     }
   }
 });
+
 const db = low(adapter)
 const app = express();
 const VALID_STATES = ['SHUTDOWN', 'INIT', 'PAUSED', 'RUNNING'];
+const BROADCAST_CHANEL = 'state-change';
 
 app.use(bodyParser.json());
 
+// TODO: update swagger.json to generate doc
 app.get('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get('/messages', (req, res) => {
@@ -52,7 +55,6 @@ app.get('/state', (req, res) => {
 });
 
 app.put('/state', (req, res) => {
-  const exchange = 'state';
   const newState = req.body.hasOwnProperty('newState') ? req.body.newState.toUpperCase() : '';
 
   if (newState === '' | !VALID_STATES.includes(newState)) {
@@ -86,11 +88,11 @@ app.put('/state', (req, res) => {
         return;
       }
 
-      channel.assertExchange(exchange, 'fanout', {
+      channel.assertExchange(BROADCAST_CHANEL, 'fanout', {
         durable: false
       });
 
-      channel.publish(exchange, '', Buffer.from(newState));
+      channel.publish(BROADCAST_CHANEL, '', Buffer.from(newState));
       console.log(`[x] Sent ${newState}`);
       res.status(200);
       res.json({

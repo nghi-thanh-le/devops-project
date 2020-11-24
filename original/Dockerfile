@@ -13,4 +13,4 @@ RUN apk update && apk add bash
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 # CMD [ "./wait-for-it.sh", "rabbitmq:15672", "--","nodemon", "orig.js" ]
 # CMD ["nodemon", "--ignore", "state-db", "orig.js" ]
-CMD [ "./wait-for-it.sh", "rabbitmq:15672", "--","nodemon", "orig.js" ]
+CMD [ "./wait-for-it.sh", "rabbitmq:15672", "-s", "-t", "25", "--","nodemon", "orig.js" ]

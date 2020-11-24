@@ -4,44 +4,28 @@ const os = require('os');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
 
-const isEmpty = (obj) => {
-    for (let prop in obj) {
-        if (obj.hasOwnProperty(prop)) {
-            return false;
-        }
-    }
-
-    return JSON.stringify(obj) === JSON.stringify({});
-};
-
-const State = (() => {
+const State = () => {
     const STATE_LOCATION = `${__dirname}/state-db/state.json`;
     const DEFAULT_STATE = 'RUNNING';
     const DEFAULT_INIT_STATE = 'INIT';
+    const DEFAULT_STATE_OBJ = {
+        currentState: DEFAULT_INIT_STATE
+    };
 
     const adapter = new FileSync(STATE_LOCATION, {
         defaultValue: {
-            state: {
-                currentState: DEFAULT_INIT_STATE
-            }
+            state: DEFAULT_STATE_OBJ
         }
     });
     const db = low(adapter)
-    
-    let state = '';
 
-    const initState = () => {
-        const jsonData = db.get('state', {});
-        return isEmpty(jsonData) ? DEFAULT_STATE : jsonData.currentState;;
-    };
-
-    const logState = () => {
-        if (state === '') {
+    const logState = (_state = '') => {
+        if (_state === '') {
             console.warn('Empty state, skip log');
             return;
         }
 
-        const msgToWrite = `${(new Date()).toISOString()}: ${state}`;
+        const msgToWrite = `${(new Date()).toISOString()}: ${_state}`;
         console.log(msgToWrite);
         fs.appendFile(`${__dirname}/log/orig-state.log`, `${msgToWrite}${os.EOL}`, { 'flag': 'a' }, (err) => {
             if (err) {
@@ -51,14 +35,12 @@ const State = (() => {
             console.log('Saved!');
         });
     };
-
-    const getState = () => {
-        if (state === '') {
-            state = initState();
-        }
-        logState();
-        return state;
-    };
+    
+    let state = (() => {
+        const stateData = db.get('state.currentState', '').value();
+        logState(stateData);
+        return stateData === '' ? DEFAULT_STATE : stateData;
+    })();
 
     const setState = (newState = '') => {
         if (newState === '') {
@@ -66,7 +48,7 @@ const State = (() => {
             return;
         }
         state = newState;
-        logState();
+        logState(state);
 
         const newStateData = {
             currentState: state
@@ -74,7 +56,12 @@ const State = (() => {
         db.set('state', newStateData).write();
     };
 
-    return { getState, setState };
-})();
+    const getState = () => {
+        logState(state);
+        return state;
+    };
 
-module.exports = State;
+    return { getState, setState };
+};
+
+module.exports = State();
