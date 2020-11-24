@@ -23,7 +23,7 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
 
         const timer = setInterval(() => {
             console.log('Current State: ' + State.getState());
-            if (State.getState === 'RUNNING' || State.getState() === 'INIT') {
+            if (State.getState() == 'RUNNING') {
                 const sentMsg = `MSG_${msgCount++}`;
                 channel.publish(BROADCASE_MESSAGE_CHANNEL, BROADCASE_MESSAGE_TOPIC, Buffer.from(sentMsg));
                 console.log(`[x] Sent ${sentMsg} from ORIG`);
@@ -64,7 +64,6 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
                             State.setState(newState);
                         } else if (newState === 'PAUSED') {
                             State.setState(newState);
-
                         }
                     }
                 }

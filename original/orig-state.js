@@ -57,7 +57,6 @@ const State = () => {
     };
 
     const getState = () => {
-        logState(state);
         return state;
     };
 
