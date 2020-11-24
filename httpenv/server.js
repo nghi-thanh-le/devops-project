@@ -100,6 +100,7 @@ app.put('/state', (req, res) => {
       })
       setTimeout(function() { 
         connection.close();
+        process.exit(1);
       }, 500);
     });
   });
