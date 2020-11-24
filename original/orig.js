@@ -1,15 +1,16 @@
 const amqp = require('amqplib/callback_api');
 const State = require('./orig-state.js');
+const ORIG_CONSTANTS = require('./orig-constants.js');
 
-const STATE_UPDATE_CHANNEL = 'state-change';
-const BROADCASE_MESSAGE_CHANNEL = 'message_queue';
-const BROADCASE_MESSAGE_TOPIC = 'my.o';
+if (State.getState() === State.DEFAULT_INIT_STATE) {
+    State.setState(State.DEFAULT_STATE);
+}
 
 amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
     if (error0) {
         throw error0;
     }
-    console.log('[*] Connect to rabbitmq from Original')
+    console.log('[*] Connect to rabbitmq from Original');
 
     connection.createChannel((error1, channel) => {
         if (error1) {
@@ -17,20 +18,20 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
         }
         let msgCount = 1;
 
-        channel.assertExchange(BROADCASE_MESSAGE_CHANNEL, 'topic', {
+        channel.assertExchange(ORIG_CONSTANTS.BROADCAST_MESSAGE_CHANNEL, ORIG_CONSTANTS.BROADCAST_MESSAGE_TYPE, {
             durable: false
         });
 
         const timer = setInterval(() => {
             console.log('Current State: ' + State.getState());
-            if (State.getState() == 'RUNNING') {
+            if (State.getState() === State.RUNNING_STATE) {
                 const sentMsg = `MSG_${msgCount++}`;
-                channel.publish(BROADCASE_MESSAGE_CHANNEL, BROADCASE_MESSAGE_TOPIC, Buffer.from(sentMsg));
+                channel.publish(ORIG_CONSTANTS.BROADCAST_MESSAGE_CHANNEL, ORIG_CONSTANTS.BROADCAST_MESSAGE_TOPIC, Buffer.from(sentMsg));
                 console.log(`[x] Sent ${sentMsg} from ORIG`);
             }
-        }, 50000);
+        }, 25000);
 
-        channel.assertExchange(STATE_UPDATE_CHANNEL, 'fanout', {
+        channel.assertExchange(ORIG_CONSTANTS.STATE_UPDATE_CHANNEL, ORIG_CONSTANTS.STATE_UPDATE_TYPE, {
             durable: false
         });
 
@@ -41,7 +42,7 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
                 throw error2;
             }
             console.log(`[*] Waiting for messages in ${q.queue}`);
-            channel.bindQueue(q.queue, STATE_UPDATE_CHANNEL, '');
+            channel.bindQueue(q.queue, ORIG_CONSTANTS.STATE_UPDATE_CHANNEL, '');
 
             channel.consume(q.queue, (msg) => {
                 if (msg.content) {
@@ -50,20 +51,12 @@ amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
                     if (newState === State.getState()) {
                         console.log('Same state as current state, skip do nothing!');
                     } else {
-                        if (newState == 'SHUTDOWN') {
+                        State.setState(newState);
+                        if (newState === State.SHUTDOWN_STATE) {
                             console.log('shutting down');
-                            State.setState('SHUTDOWN');
                             clearInterval(timer);
                             connection.close();
                             process.exit(0);
-                        } else if (newState === 'INIT') {
-                            // TODO: up and running
-                            const currentState = State.getState();
-                            State.setState(newState);
-                        } else if (newState === 'RUNNING') {
-                            State.setState(newState);
-                        } else if (newState === 'PAUSED') {
-                            State.setState(newState);
                         }
                     }
                 }

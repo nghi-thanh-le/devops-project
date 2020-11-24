@@ -6,10 +6,11 @@ const FileSync = require('lowdb/adapters/FileSync');
 
 const State = () => {
     const STATE_LOCATION = `${__dirname}/state-db/state.json`;
-    const DEFAULT_STATE = 'RUNNING';
-    const DEFAULT_INIT_STATE = 'INIT';
+    const RUNNING_STATE = 'RUNNING';
+    const SHUTDOWN_STATE = 'SHUTDOWN';
+    const INIT_STATE = 'INIT';
     const DEFAULT_STATE_OBJ = {
-        currentState: DEFAULT_INIT_STATE
+        currentState: INIT_STATE
     };
 
     const adapter = new FileSync(STATE_LOCATION, {
@@ -39,7 +40,7 @@ const State = () => {
     let state = (() => {
         const stateData = db.get('state.currentState', '').value();
         logState(stateData);
-        return stateData === '' ? DEFAULT_STATE : stateData;
+        return stateData === '' ? INIT_STATE : stateData;
     })();
 
     const setState = (newState = '') => {
@@ -60,7 +61,12 @@ const State = () => {
         return state;
     };
 
-    return { getState, setState };
+    return {
+        INIT_STATE,
+        SHUTDOWN_STATE,
+        RUNNING_STATE,
+        getState, 
+        setState };
 };
 
 module.exports = State();

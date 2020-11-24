@@ -16,7 +16,7 @@ const adapter = new FileSync(`${__dirname}/state-db/state.json`, {
 
 const db = low(adapter)
 const app = express();
-const VALID_STATES = ['SHUTDOWN', 'INIT', 'PAUSED', 'RUNNING'];
+const VALID_STATES = ['SHUTDOWN', 'PAUSED', 'RUNNING'];
 const BROADCAST_CHANEL = 'state-change';
 
 app.use(bodyParser.json());
