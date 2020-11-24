@@ -48,7 +48,10 @@ app.get('/run-log', (req, res) => {
 });
 
 app.get('/state', (req, res) => {
-  // res.json(db.get('state', {}));
+  res.json(db.get('state', {}));
+});
+
+app.get('/state-test', (req, res) => {
   amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
     if (error0) {
       throw error0;
@@ -60,7 +63,8 @@ app.get('/state', (req, res) => {
         throw error1;
       }
       const exchange = 'state';
-      const msg = 'SHUTDOWN';
+      const msg = req.query.st ? req.query.st : '';
+      console.log('msg: ', msg);
 
       channel.assertExchange(exchange, 'fanout', {
         durable: false
@@ -70,11 +74,11 @@ app.get('/state', (req, res) => {
       console.log(" [x] Sent %s", msg);
       // close it right away will stop msg
       setTimeout(function() { 
-        connection.close(); 
+        connection.close();
       }, 500);
     });
   });
-  res.send(" [x] Sent message");
+  res.send(`[x] Sent message ${req.query.st}`);
 });
 
 app.put('state', (req, res) => {
