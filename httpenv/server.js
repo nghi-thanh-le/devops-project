@@ -3,10 +3,9 @@ const express = require('express');
 const amqp = require('amqplib/callback_api');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
-
+const bodyParser = require('body-parser');
 const low = require('lowdb');
 const FileSync = require('lowdb/adapters/FileSync');
-
 const adapter = new FileSync('state-db/state.json', {
   defaultValue: {
     state: {
@@ -15,9 +14,10 @@ const adapter = new FileSync('state-db/state.json', {
   }
 });
 const db = low(adapter)
-
-
 const app = express();
+const VALID_STATES = ['SHUTDOWN', 'INIT', 'PAUSED', 'RUNNING'];
+
+app.use(bodyParser.json());
 
 app.get('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -51,38 +51,56 @@ app.get('/state', (req, res) => {
   res.json(db.get('state', {}));
 });
 
-app.get('/state-test', (req, res) => {
+app.put('/state', (req, res) => {
+  const exchange = 'state';
+  const newState = req.body.hasOwnProperty('newState') ? req.body.newState.toUpperCase() : '';
+
+  if (newState === '' | !VALID_STATES.includes(newState)) {
+    res.status(400);
+    res.json({
+      message: 'Invalid state'
+    });
+    return;
+  }
+
   amqp.connect(process.env.MESSAGE_QUEUE, (error0, connection) => {
     if (error0) {
-      throw error0;
+      console.error(error0);
+      res.status(500);
+      res.json({
+        message: 'Error while tring to set state'
+      });
+      connection.close();
+      return;
     }
-    console.log('[*] Connect to rabbitmq from httpenv')
 
-    connection.createChannel(function (error1, channel) {
+    console.log('[*] Connect to rabbitmq from httpenv');
+    connection.createChannel((error1, channel) => {
       if (error1) {
-        throw error1;
+        console.error(error1);
+        res.status(500);
+        res.json({
+          message: 'Error while tring to set state'
+        });
+        connection.close();
+        return;
       }
-      const exchange = 'state';
-      const msg = req.query.st ? req.query.st : '';
-      console.log('msg: ', msg);
 
       channel.assertExchange(exchange, 'fanout', {
         durable: false
       });
 
-      channel.publish(exchange, '', Buffer.from(msg));
-      console.log(" [x] Sent %s", msg);
-      // close it right away will stop msg
+      channel.publish(exchange, '', Buffer.from(newState));
+      console.log(`[x] Sent ${newState}`);
+      res.status(200);
+      res.json({
+        message: 'Set state done!'
+      })
       setTimeout(function() { 
         connection.close();
       }, 500);
     });
   });
-  res.send(`[x] Sent message ${req.query.st}`);
-});
-
-app.put('state', (req, res) => {
-  res.send('Not yet operated');
 });
 
 app.listen(8080, () => {
