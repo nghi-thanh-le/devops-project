@@ -17,4 +17,4 @@ before_script:
 build:
   stage: build
   script:
-    - docker-compose -f docker-compose.test.yaml up -d
+    - docker-compose -f docker-compose.test.yaml up --build

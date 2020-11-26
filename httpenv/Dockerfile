@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM node:lts-alpine
 WORKDIR /httpenv
 COPY package.json /httpenv
 COPY package-lock.json /httpenv
