@@ -13,4 +13,4 @@ RUN npm i
 RUN npm i -g nodemon
 CMD [ "nodemon", "server.js" ]
 # CMD [ "./wait-for-it.sh", "rabbitmq:15672", "-s", "-t", "30", "--","nodemon", "server.js" ]
-EXPOSE 8080
+EXPOSE 8081
