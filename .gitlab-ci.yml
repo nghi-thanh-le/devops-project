@@ -10,3 +10,5 @@ build:
   stage: build
   script:
     - docker ps -a
+    - apk add --no-cache docker-compose
+    - docker-compose up --build
