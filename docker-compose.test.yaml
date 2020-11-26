@@ -10,10 +10,10 @@ services:
     #         - app-networks
 
     observer:
-        container_name: observer
+        container_name: observer-test
         build: ./observer
 
-        
+
     # original:
     #     container_name: original
     #     build: ./original
@@ -91,13 +91,13 @@ services:
     #         - gitlab-network
 
 
-volumes:
-    nodemodules: 
-    share-log:
-    state-db:
+# volumes:
+#     nodemodules: 
+#     share-log:
+#     state-db:
 
-networks: 
-    app-networks:
-        driver: bridge
-    gitlab-network:
-        name: gitlab-network
+# networks: 
+#     app-networks:
+#         driver: bridge
+#     gitlab-network:
+#         name: gitlab-network
