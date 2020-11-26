@@ -5,10 +5,13 @@ services:
 
 before_script:
   - docker info
+  - apk update
+  - apk upgrade
+  - apk add python python-dev py-pip build-base
+  - pip install docker-compose
+
 
 build:
   stage: build
   script:
-    - docker ps -a
-    - apk add --no-cache docker-compose
     - docker-compose up --build
