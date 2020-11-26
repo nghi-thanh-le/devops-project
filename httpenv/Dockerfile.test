@@ -1,0 +1,12 @@
+FROM node:alpine
+WORKDIR /httpenv_test
+COPY package.json /httpenv_test
+COPY package-lock.json /httpenv_test
+COPY app.js /httpenv_test
+COPY server.js /httpenv_test
+COPY swagger.json /httpenv_test
+ADD log /httpenv_test
+ADD __tests__ /httpenv_test
+ADD request-handlers /httpenv_test
+RUN npm i
+CMD [ "node", "test" ]

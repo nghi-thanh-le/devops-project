@@ -1,6 +1,0 @@
-FROM node:alpine
-WORKDIR /observer
-# COPY package.json /observer
-# COPY package-lock.json /observer
-COPY test.js /observer
-CMD [ "node", "test.js" ]
