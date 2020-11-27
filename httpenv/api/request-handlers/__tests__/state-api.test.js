@@ -1,6 +1,7 @@
 'use strict';
 
 jest.mock('amqplib/callback_api');
+jest.useFakeTimers();
 
 const request = require('supertest');
 const { getMockReq, getMockRes } = require('@jest-mock/express');
@@ -9,7 +10,7 @@ const amqp = require('amqplib/callback_api');
 
 const { res, next, clearMockRes } = getMockRes();
 const originalError = console.error;
-const originalProcess = process;
+
 const connection = jest.fn();
 connection.close = () => {};
 
@@ -22,7 +23,6 @@ describe('Test state-api module', () => {
     
     beforeEach(() => {
         console.error = jest.fn();
-        process.exit = jest.fn();
         clearMockRes();
     });
 
@@ -118,11 +118,12 @@ describe('Test state-api module', () => {
             message: 'Set state done!'
         });
         expect(res.status).toHaveBeenCalledWith(200);
+        expect(setTimeout).toHaveBeenCalledTimes(1);
+        expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 500);
         done();
     });
 
     afterEach(() => {
         console.error = originalError;
-        process = originalProcess;
     });
 });
