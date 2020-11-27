@@ -27,8 +27,4 @@ app.put('/state', (req, res) => {
   stateHandlers.updateState(req, res);
 });
 
-app.get("/test", (req, res) => {
-  res.status(200).send("Hello World!");
-});
-
 module.exports = app;
