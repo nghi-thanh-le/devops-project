@@ -1,7 +1,10 @@
-image: docker/compose:latest
+image: 
+  name: docker/compose:latest
+  entrypoint: ["/bin/sh", "-c"]
 
 variables:
-  DOCKER_DRIVER: overlay
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay2
 
 services:
   - docker:dind
