@@ -74,6 +74,33 @@ services:
         environment: 
             - MESSAGE_QUEUE=amqp://rabbitmq
 
+    gitlab-web:
+        image: gitlab/gitlab-ce:latest
+        container_name: gitlab-web
+        hostname: gitlab-web
+        volumes:
+            - './gitlab-config:/etc/gitlab'
+            - './gitlab-logs:/var/log/gitlab'
+            - './gitlab-data:/var/opt/gitlab'
+        ports:
+            - '2222:22'
+            - '8080:80'
+            - '443:443'
+            - '4567:4567'
+        networks:
+            - gitlab-network
+
+    gitlab-runner1:
+        image: gitlab/gitlab-runner:latest
+        container_name: gitlab-runner1
+        hostname: gitlab-runner1
+        volumes:
+            - './gitlab-runner1-config:/etc/gitlab-runner:Z'
+            - '/var/run/docker.sock:/var/run/docker.sock'
+        networks:
+            - gitlab-network
+
+
 volumes:
     nodemodules: 
     share-log:
@@ -82,3 +109,5 @@ volumes:
 networks: 
     app-networks:
         driver: bridge
+    gitlab-network:
+        name: gitlab-network

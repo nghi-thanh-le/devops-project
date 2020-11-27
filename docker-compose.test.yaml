@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+    
+    httpenv_test:
+        container_name: httpenv_test
+        build: 
+            context: httpenv
+            dockerfile: Dockerfile.test

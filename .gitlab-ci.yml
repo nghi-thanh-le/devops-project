@@ -1,12 +1,35 @@
-image: docker:latest
+image: 
+  name: docker/compose:latest
+  entrypoint: ["/bin/sh", "-c"]
+
+stages:
+  - test
+  - build
+  - deploy
+
+variables:
+  DOCKER_DRIVER: overlay2
 
 services:
   - docker:dind
 
 before_script:
   - docker info
+  - docker version
+  - docker-compose version
 
 build:
   stage: build
   script:
-    - docker ps -a
+    - docker-compose build
+
+test:
+  stage: test
+  script:
+    - docker-compose -f docker-compose.test.yaml up --build
+
+
+deploy:
+  stage: deploy
+  script:
+    - echo "This job deploys something from the branch."

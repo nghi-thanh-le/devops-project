@@ -1,0 +1,5 @@
+FROM node:lts-alpine
+WORKDIR /httpenv
+COPY . /httpenv
+RUN npm i
+CMD [ "npm", "test"]

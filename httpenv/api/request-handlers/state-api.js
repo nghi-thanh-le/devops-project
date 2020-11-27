@@ -4,13 +4,14 @@ const FileSync = require('lowdb/adapters/FileSync');
 const path = require('path');
 
 const DB_LOCATION = path.resolve(`${__dirname}/../state-db/state.json`);
+const DEFAULT_VALUE = {
+  state: {
+    currentState: 'INIT'
+  }
+};
 
 const adapter = new FileSync(DB_LOCATION, {
-  defaultValue: {
-    state: {
-      currentState: 'INIT'
-    }
-  }
+  defaultValue: DEFAULT_VALUE
 });
 
 const db = low(adapter)
@@ -18,7 +19,7 @@ const VALID_STATES = ['SHUTDOWN', 'PAUSED', 'RUNNING'];
 const BROADCAST_CHANEL = 'state-change';
 
 const getState = (req, res) => {
-  res.json(db.get('state', {}));
+  res.json(db.get('state', DEFAULT_VALUE).value());
 };
 
 const updateState = (req, res) => {
@@ -64,7 +65,7 @@ const updateState = (req, res) => {
       res.status(200);
       res.json({
         message: 'Set state done!'
-      })
+      });
       setTimeout(function() { 
         connection.close();
         process.exit(1);
