@@ -65,7 +65,7 @@ const updateState = (req, res) => {
       res.status(200);
       res.json({
         message: 'Set state done!'
-      })
+      });
       setTimeout(function() { 
         connection.close();
         process.exit(1);
