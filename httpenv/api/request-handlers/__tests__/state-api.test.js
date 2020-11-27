@@ -3,9 +3,8 @@
 jest.mock('amqplib/callback_api');
 jest.useFakeTimers();
 
-const request = require('supertest');
 const { getMockReq, getMockRes } = require('@jest-mock/express');
-const { getState, updateState } = require('../state-api.js');
+const { getState, updateState } = require('../state-api');
 const amqp = require('amqplib/callback_api');
 
 const { res, next, clearMockRes } = getMockRes();
@@ -35,11 +34,7 @@ describe('Test state-api module', () => {
     });
 
     test('Test updateState if invalid data', done => {
-        const req = getMockReq({
-            body: {}
-        });
-
-        updateState(req, res);
+        updateState(getMockReq(), res);
         expect(res.json).toHaveBeenCalledWith({
             message: 'Invalid state'
         });

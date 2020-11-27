@@ -7,10 +7,10 @@ const readFileThenSendBack = (fileLocation, req, res) => {
   fs.readFile(fileLocation, 'utf-8', (e, data) => {
     if (e) {
       console.error(e);
-      res.statusCode = 400;
+      res.status(400);
       res.send(e);
     } else {
-      res.statusCode = 200;
+      res.status(200);
       res.send(data);
     }
   });

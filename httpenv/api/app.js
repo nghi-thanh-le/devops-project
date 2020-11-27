@@ -2,8 +2,8 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
 const bodyParser = require('body-parser');
-const logHandlers = require('./request-handlers/log-messages.js');
-const stateHandlers = require('./request-handlers/state-api.js');
+const logHandlers = require('./request-handlers/log-messages');
+const stateHandlers = require('./request-handlers/state-api');
 const app = express();
 
 app.use(bodyParser.json());
