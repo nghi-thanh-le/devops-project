@@ -3,4 +3,7 @@ node_modules
 **/*.log
 **/state.json
 **/*.txt
-gitlab-*
+gitlab-config
+gitlab-data
+gitlab-logs
+gitlab-runner1-config

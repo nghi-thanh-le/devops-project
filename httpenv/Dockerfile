@@ -1,15 +1,6 @@
 FROM node:lts-alpine
 WORKDIR /httpenv
-COPY package.json /httpenv
-COPY package-lock.json /httpenv
-COPY app.js /httpenv
-COPY server.js /httpenv
-COPY swagger.json /httpenv
-COPY wait-for-it.sh /httpenv
-ADD log /httpenv
-ADD __tests__ /httpenv
-ADD request-handlers /httpenv
-ADD state-db /httpenv
+COPY . /httpenv
 RUN apk update && apk add bash
 RUN npm i --force
 RUN npm i -g nodemon

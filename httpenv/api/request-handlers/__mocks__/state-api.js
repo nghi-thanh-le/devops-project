@@ -4,6 +4,11 @@ const getState = (req, res) => {
     });
 };
 
+const getState = (req, res) => {
+    return '123';
+}
+
 module.exports = {
-    getState
+    getState,
+    setState
 }
