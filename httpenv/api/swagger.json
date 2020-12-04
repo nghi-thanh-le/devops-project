@@ -1,1 +1,47 @@
-{}
+{
+    "swagger": "2.0",
+    "info": {
+      "description": "Devops final project API doc",
+      "version": "1.0.0",
+      "title": "Devop final Project",
+      "contact": {
+        "email": "nghi.le@tuni.fo"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      }
+    },
+    "host": "localhost:8081",
+    "basePath": "/",
+    "schemes": [
+      "http"
+    ],
+    "paths": {
+      "/messages": {
+        "get": {
+          "tags": [
+            "messages"
+          ],
+          "summary": "Returns all message registered with OBSE-service",
+          "description": "",
+          "operationId": "addPet",
+          "produces": [
+            "text/html"
+          ],
+          "responses": {
+            "200": {
+              "description": "Log Found"
+            },
+            "400": {
+              "description": "Can not find log"
+            }
+          }
+        }
+      }
+    },
+    "externalDocs": {
+      "description": "Find out more about Swagger",
+      "url": "http://swagger.io"
+    }
+  }
