@@ -17,45 +17,34 @@ describe('Test log-messages module', () => {
     });
 
     test('Test read obse.log file but file does not exist', done => {
-        fs.readFile.mockImplementation((fileLocation, readType, callback) => {
-            callback("Error Message", null);
-        });
+        fs.existsSync.mockImplementation((fileLocation) => false);
 
         obseLogHanlder(getMockReq(), res);
-        expect(res.send).toHaveBeenCalledWith("Error Message");
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.send).toHaveBeenCalledWith('Log file does not exist');
+        expect(res.status).toHaveBeenCalledWith(404);
         done();
     });
 
     test('Test read obse.log file and file exists', done => {
-        fs.readFile.mockImplementation((fileLocation, readType, callback) => {
-            callback(null, "Sample File Data");
-        });
+        fs.existsSync.mockImplementation((fileLocation) => true);
 
         obseLogHanlder(getMockReq(), res);
-        expect(res.send).toHaveBeenCalledWith("Sample File Data");
         expect(res.status).toHaveBeenCalledWith(200);
         done();
     });
 
     test('Test read orig-state.log file but file does not exist', done => {
-        fs.readFile.mockImplementation((fileLocation, readType, callback) => {
-            callback("Error Message", null);
-        });
+        fs.existsSync.mockImplementation((fileLocation) => false);
 
         origStateLogHanlder(getMockReq(), res);
-        expect(res.send).toHaveBeenCalledWith("Error Message");
-        expect(res.status).toHaveBeenCalledWith(400);
+        expect(res.status).toHaveBeenCalledWith(404);
         done();
     });
 
     test('Test read orig-state.log file and file exists', done => {
-        fs.readFile.mockImplementation((fileLocation, readType, callback) => {
-            callback(null, "Sample File Data");
-        });
+        fs.existsSync.mockImplementation((fileLocation) => true);
 
         origStateLogHanlder(getMockReq(), res);
-        expect(res.send).toHaveBeenCalledWith("Sample File Data");
         expect(res.status).toHaveBeenCalledWith(200);
         done();
     });
