@@ -14,15 +14,20 @@
   },
   "host": "localhost:8081",
   "basePath": "/",
-  "schemes": ["http"],
+  "schemes": [
+    "http"
+  ],
   "paths": {
     "/messages": {
       "get": {
-        "tags": ["messages"],
+        "tags": [
+          "messages"
+        ],
         "summary": "Returns all message registered with OBSE-service",
         "description": "",
-        "operationId": "addPet",
-        "produces": ["text/html"],
+        "produces": [
+          "text/html"
+        ],
         "responses": {
           "200": {
             "description": "Log Found"
@@ -30,6 +35,97 @@
           "400": {
             "description": "Can not find log"
           }
+        }
+      }
+    },
+    "/state": {
+      "get": {
+        "tags": [
+          "state"
+        ],
+        "summary": "Get the value of state",
+        "description": "",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "Log Found"
+          },
+          "400": {
+            "description": "Can not find log"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "state"
+        ],
+        "summary": "Set the value of state",
+        "description": "",
+        "operationId": "updateState",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New State object to be added to the db",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/State"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Set state done!"
+          },
+          "400": {
+            "description": "Invalid State"
+          },
+          "500": {
+            "description": "Error while tring to set state"
+          }
+        }
+      }
+    },
+    "/run-log": {
+      "get": {
+        "tags": [
+          "run-log"
+        ],
+        "summary": "Get information about state changes",
+        "description": "",
+        "produces": [
+          "text/html"
+        ],
+        "responses": {
+          "200": {
+            "description": "Log Found"
+          },
+          "400": {
+            "description": "Can not find log"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "State": {
+      "type": "object",
+      "properties": {
+        "newState": {
+          "type": "string",
+          "enum": [
+            "RUNNING",
+            "SHUTDOWN",
+            "PAUSED"
+          ]
         }
       }
     }

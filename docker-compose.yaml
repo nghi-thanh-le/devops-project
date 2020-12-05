@@ -64,7 +64,7 @@ services:
         volumes:
             - ./httpenv:/httpenv
             - share-log:/httpenv/api/log/share:ro
-            - state-db:/httpenv/state-db:ro
+            - state-db:/httpenv/api/state-db:ro
         depends_on: 
             - rabbitmq
         links:
