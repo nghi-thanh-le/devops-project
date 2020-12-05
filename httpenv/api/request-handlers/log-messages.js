@@ -1,8 +1,8 @@
 const fs = require('fs')
 const lineByLine = require('n-readlines');
 const path = require('path');
-const OBSE_LOG_LOCATION = path.resolve(`${__dirname}/../log/obse.log`);
-const ORIG_STATE_LOG_LOCATION = path.resolve(`${__dirname}/../log/orig-state.log`);
+const OBSE_LOG_LOCATION = path.resolve(`${__dirname}/../log/share/obse.log`);
+const ORIG_STATE_LOG_LOCATION = path.resolve(`${__dirname}/../log/share/orig-state.log`);
 
 const readFileThenSendBack = (fileLocation, req, res) => {
   if (!fs.existsSync(fileLocation)) {
