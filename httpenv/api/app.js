@@ -7,9 +7,10 @@ const stateHandlers = require('./request-handlers/state-api');
 const app = express();
 
 app.use(bodyParser.json());
+app.use(swaggerUi.serve);
 
 // TODO: update swagger.json to generate doc
-app.get('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.get('/', swaggerUi.setup(swaggerDocument));
 
 app.get('/messages', (req, res) => {
   logHandlers.obseLogHanlder(req, res);
