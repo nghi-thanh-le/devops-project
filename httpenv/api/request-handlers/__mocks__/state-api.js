@@ -6,6 +6,6 @@ const updateState = (req, res) => {
 };
 
 module.exports = {
-    getState,
-    updateState
-}
+  getState,
+  updateState,
+};

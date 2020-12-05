@@ -6,15 +6,15 @@ const path = require('path');
 const DB_LOCATION = path.resolve(`${__dirname}/../state-db/state.json`);
 const DEFAULT_VALUE = {
   state: {
-    currentState: 'INIT'
-  }
+    currentState: 'INIT',
+  },
 };
 
 const adapter = new FileSync(DB_LOCATION, {
-  defaultValue: DEFAULT_VALUE
+  defaultValue: DEFAULT_VALUE,
 });
 
-const db = low(adapter)
+const db = low(adapter);
 const VALID_STATES = ['SHUTDOWN', 'PAUSED', 'RUNNING'];
 const BROADCAST_CHANEL = 'state-change';
 
@@ -23,12 +23,14 @@ const getState = (req, res) => {
 };
 
 const updateState = (req, res) => {
-  const newState = req.body.hasOwnProperty('newState') ? req.body.newState.toUpperCase() : '';
+  const newState = Object.prototype.hasOwnProperty.call(req.body, 'newState')
+    ? req.body.newState.toUpperCase()
+    : '';
 
-  if (newState === '' | !VALID_STATES.includes(newState)) {
+  if (newState === '' || !VALID_STATES.includes(newState)) {
     res.status(400);
     res.json({
-      message: 'Invalid state'
+      message: 'Invalid state',
     });
     return;
   }
@@ -38,7 +40,7 @@ const updateState = (req, res) => {
       console.error(error0);
       res.status(500);
       res.json({
-        message: 'Error while tring to set state'
+        message: 'Error while tring to set state',
       });
       connection.close();
       return;
@@ -50,23 +52,23 @@ const updateState = (req, res) => {
         console.error(error1);
         res.status(500);
         res.json({
-          message: 'Error while tring to set state'
+          message: 'Error while tring to set state',
         });
         connection.close();
         return;
       }
 
       channel.assertExchange(BROADCAST_CHANEL, 'fanout', {
-        durable: false
+        durable: false,
       });
 
       channel.publish(BROADCAST_CHANEL, '', Buffer.from(newState));
       console.log(`[x] Sent ${newState}`);
       res.status(200);
       res.json({
-        message: 'Set state done!'
+        message: 'Set state done!',
       });
-      setTimeout(function() { 
+      setTimeout(() => {
         connection.close();
         process.exit(1);
       }, 500);
@@ -75,6 +77,6 @@ const updateState = (req, res) => {
 };
 
 module.exports = {
-    getState,
-    updateState
-}
+  getState,
+  updateState,
+};

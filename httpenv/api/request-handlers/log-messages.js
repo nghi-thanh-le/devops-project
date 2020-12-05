@@ -1,8 +1,11 @@
-const fs = require('fs')
-const lineByLine = require('n-readlines');
+const fs = require('fs');
+const LineByLine = require('n-readlines');
 const path = require('path');
+
 const OBSE_LOG_LOCATION = path.resolve(`${__dirname}/../log/share/obse.log`);
-const ORIG_STATE_LOG_LOCATION = path.resolve(`${__dirname}/../log/share/orig-state.log`);
+const ORIG_STATE_LOG_LOCATION = path.resolve(
+  `${__dirname}/../log/share/orig-state.log`
+);
 
 const readFileThenSendBack = (fileLocation, req, res) => {
   if (!fs.existsSync(fileLocation)) {
@@ -10,15 +13,16 @@ const readFileThenSendBack = (fileLocation, req, res) => {
     res.send('Log file does not exist');
   } else {
     res.status(200);
-    const liner = new lineByLine(fileLocation);
+    const liner = new LineByLine(fileLocation);
     let line;
     let data = '';
-    while (line = liner.next()) {
+    // eslint-disable-next-line no-cond-assign
+    while ((line = liner.next())) {
       data = data.concat(`${line.toString('ascii')}<br/>`);
     }
     res.send(data);
   }
-}
+};
 
 const obseLogHanlder = (req, res) => {
   readFileThenSendBack(OBSE_LOG_LOCATION, req, res);
@@ -30,5 +34,5 @@ const origStateLogHanlder = (req, res) => {
 
 module.exports = {
   obseLogHanlder,
-  origStateLogHanlder
-}
+  origStateLogHanlder,
+};

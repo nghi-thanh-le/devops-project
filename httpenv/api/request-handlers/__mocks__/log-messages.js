@@ -7,5 +7,5 @@ const origStateLogHanlder = (req, res) => {
 
 module.exports = {
   obseLogHanlder,
-  origStateLogHanlder
-}
+  origStateLogHanlder,
+};
